@@ -1,25 +1,35 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './components/app/app';
-import { Provider } from 'react-redux';
-import { store } from './store';
-import { checkAuthAction, fetchOffersAction } from './store/api-actions';
-import { ToastContainer, Zoom } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.min.css';
-import { CLOSE_TIME } from './const';
+import { createRoot, Root } from 'react-dom/client';
+import App from './app/app';
+// import { Provider } from 'react-redux';
 
-store.dispatch(checkAuthAction());
-store.dispatch(fetchOffersAction());
+const targetNode = document.body;
+const config: MutationObserverInit  = { childList: true, subtree: true };
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
+let root: Root | null = null;
 
-root.render(
-  <React.StrictMode>
-    <Provider store={store} >
-      <ToastContainer transition={Zoom} autoClose={CLOSE_TIME} />
-      <App />
-    </Provider>
-  </React.StrictMode>
-);
+const callback: MutationCallback = function (mutationsList, observer) {
+  for (let mutation of mutationsList) {
+      if (mutation.type === 'childList') {
+          const element = document.querySelector(".t-main__wrapper");
+
+          if (element) {
+            observer.disconnect();
+            if (!root) {
+              root = createRoot(element);
+            }
+
+            root.render(
+              <React.StrictMode>
+                {/* <Provider store={store} > */}
+                  <App />
+                {/* </Provider> */}
+              </React.StrictMode>
+            );
+          }
+      }
+  }
+};
+
+const observer = new MutationObserver(callback);
+observer.observe(targetNode, config);
