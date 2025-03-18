@@ -1,49 +1,21 @@
-# Личный проект «Шесть городов»
+# Инструкция по работе со сборкой
 
-* Студент: [Владимир Мещеряков](https://up.htmlacademy.ru/react/15/user/1730259).
-* Наставник: [Олег Глущенко](https://htmlacademy.ru/profile/id305355).
+Данная сборка позволяет разрабатывать локально, но не теряя окружение продуктового сервера, позволяя постепенно отказаться от легаси кода, встраивая мини реакт приложения в существующий сайт.
 
----
-
-_Не удаляйте и не изменяйте папки и файлы:_
-_`.editorconfig`, `.gitattributes`, `.gitignore`._
-
----
-
-### Памятка
-
-#### 1. Зарегистрируйтесь на Гитхабе
-
-Если у вас ещё нет аккаунта на [github.com](https://github.com/join), скорее зарегистрируйтесь.
-
-#### 2. Создайте форк
-
-Откройте репозиторий и нажмите кнопку «Fork» в правом верхнем углу. Репозиторий из Академии будет скопирован в ваш аккаунт.
-
-<img width="769" alt="Press 'Fork'" src="https://cloud.githubusercontent.com/assets/259739/20264045/a1ddbf40-aa7a-11e6-9a1a-724a1c0123c8.png">
-
-Получится вот так:
-
-<img width="769" alt="Forked" src="https://cloud.githubusercontent.com/assets/259739/20264122/f63219a6-aa7a-11e6-945a-89818fc7c014.png">
-
-#### 3. Клонируйте репозиторий на свой компьютер
-
-Будьте внимательны: нужно клонировать свой репозиторий (форк), а не репозиторий Академии. Также обратите внимание, что клонировать репозиторий нужно через SSH, а не через HTTPS. Нажмите зелёную кнопку в правой части экрана, чтобы скопировать SSH-адрес вашего репозитория:
-
-<img width="769" alt="SSH" src="https://cloud.githubusercontent.com/assets/259739/20264180/42704126-aa7b-11e6-9ab4-73372b812a53.png">
-
-Клонировать репозиторий можно так:
-
-```
-git clone SSH-адрес_вашего_форка
+Создаем раздел, помещаем туда файл default.aspx. В файле в разделе вставки контента помещаем два скрипта:
+```js
+<script type="module">
+  import RefreshRuntime from "http://localhost:5173/@react-refresh"
+  RefreshRuntime.injectIntoGlobalHook(window)
+  window.$RefreshReg$ = () => {}
+  window.$RefreshSig$ = () => (type) => type
+  window.__vite_plugin_react_preamble_installed__ = true
+</script>
+<script type="module" src="http://localhost:5173/src/index.tsx"></script>
 ```
 
-Команда клонирует репозиторий на ваш компьютер и подготовит всё необходимое для старта работы.
+т.к. мы работаем в окружении net Первый скрипт позволяет обновлять страницу в режиме разработки, второй непосредственно сам бандл приложения, Запускаем команду
+npm run start програмируем раздел.
 
-#### 4. Начинайте обучение!
-
----
-
-<a href="https://htmlacademy.ru/intensive/react"><img align="left" width="50" height="50" title="HTML Academy" src="https://up.htmlacademy.ru/static/img/intensive/react/logo-for-github.png"></a>
-
-Репозиторий создан для обучения на профессиональном онлайн‑курсе «[React. Разработка сложных клиентских приложений](https://htmlacademy.ru/intensive/react)» от [HTML Academy](https://htmlacademy.ru).
+После завершения сборки перейдите в папку dist, скопируйте папку assets в ваш раздел.
+Вместо использованных в разработке скриптов, вставьте скрипты для продакшн-версии. Вы можете взять их из сгенерированного файла index.html в папке dist
