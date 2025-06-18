@@ -1,57 +1,46 @@
 import React from 'react';
 import { createRoot, Root } from 'react-dom/client';
 import App from './app/app';
-// import { Provider } from 'react-redux';
+import { Provider } from 'react-redux';
+import { store } from './shared/lib/redux';
+import { userStore } from './entities/user/model/user.store';
 
-const targetNode = document.querySelector(".t-main__wrapper") || document.body;
-const config: MutationObserverInit  = { childList: true, subtree: true };
-const maxAttempts = 1000;
-const attemptInterval = 100;
+import './fonts.css';
+import './index.css';
+
+const MAX_ATTEMPTS = 50; // Максимальное количество попыток
+const RETRY_DELAY = 100; // Задержка между попытками в мс
 
 let root: Root | null = null;
 let attempts = 0;
-let observer: MutationObserver | null = null;
 
-const callback: MutationCallback = function (mutationsList, obs) {
-  for (let mutation of mutationsList) {
-      if (mutation.type === 'childList') {
-          const element = document.querySelector(".t-main__wrapper");
+store.dispatch(userStore.actions.initializeUser());
 
-          if (element) {
-            obs.disconnect();
-            if (!root) {
-              root = createRoot(element);
-            }
+const getContainer = async () => {
+  const container = document.getElementById('root')! as HTMLElement;
 
-            root.render(
-              <React.StrictMode>
-                {/* <Provider store={store} > */}
-                <h1>jkdflkfjsa;ldfs</h1>
-                  <App />
-                {/* </Provider> */}
-              </React.StrictMode>
-            );
+  if (container) {
+    root = createRoot(container);
 
-            return;
-          }
-      }
+    root.render(
+      <React.StrictMode>
+        <Provider store={store}>
+          {/* <ToastContainer transition={Zoom} autoClose={CLOSE_TIME} /> */}
+          <App />
+        </Provider>
+      </React.StrictMode>
+    );
+
+    return;
   }
 
   attempts++;
-  if (attempts >= maxAttempts) {
-    console.error("Целевой элемент '.t-main__wrapper' не найден после максимального количества попыток.");
-    obs.disconnect();
-    observer = null;
+
+  if (attempts >= MAX_ATTEMPTS) {
+    console.error('Не удалось найти контейнер .root после', MAX_ATTEMPTS, 'попыток');
   }
+
+  setTimeout(getContainer, RETRY_DELAY);
 };
 
-observer = new MutationObserver(callback);
-observer.observe(targetNode, config);
-
-setTimeout(() => {
-  if (observer) {
-      observer.disconnect();
-      observer = null;
-      console.warn("MutationObserver: время ожидания истекло. Элемент '.t-main__wrapper' не найден.");
-  }
-}, maxAttempts * attemptInterval + 1000);
+getContainer();
