@@ -16,8 +16,6 @@
     "proxy": "concurrently --kill-others \"npm run server\" \"npm run dev\""
   },
   "dependencies": {
-    "@pnp/graph": "^4.13.0",
-    "@pnp/nodejs": "^4.10.0",
     "@pnp/sp": "^4.10.0",
     "@reduxjs/toolkit": "^2.6.1",
     "axios": "^1.8.2",
