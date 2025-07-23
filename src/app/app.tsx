@@ -1,17 +1,14 @@
-import { spfi, SPBrowser } from "@pnp/sp";
+import { useErrorLog } from '../features';
+import { Header } from '../widgets/header/header';
 
-import "@pnp/sp/sites";
-import "@pnp/sp/webs";
-import "@pnp/sp/context-info";
-import "@pnp/sp/site-users/web";
-
-async function App() {
-  const url = window.location.origin
-
-  console.log(await spfi(url).using(SPBrowser()).web.currentUser())
+function App() {
+  useErrorLog();
 
   return (
-    <h1>Hello World</h1>
+    <div className="main-container">
+      <Header />
+      <main id="react-content" className="react-content"></main>
+    </div>
   );
 }
 
